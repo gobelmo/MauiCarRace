@@ -1,24 +1,51 @@
-﻿namespace MauiCarRace;
+﻿using MauiCarRace.Classes;
+
+namespace MauiCarRace;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+	Car car1;
+	Car car2;
+
+	bool finish = false;
 
 	public MainPage()
 	{
 		InitializeComponent();
+
+		this.car1 = new Car("Audi", 20);
+		this.car2 = new Car("Nissan", 5);
+		car1Info.Text = car1.GetCarInfo();
+		car2Info.Text = car2.GetCarInfo();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
+
+
+	private void Button_Clicked(object sender, EventArgs e)
 	{
-		count++;
+		//double distance = 2000;
+		var distance = Application.Current.MainPage.Width; // Get the screen width as distance
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
+		if (!finish)
+		{
+			var timeUseCar1 = this.car1.RunForDistance(distance);
+			ImageCar1.TranslateTo(distance - 100, 0, timeUseCar1 * 10, Easing.Linear);
+			car1Info.Text = car1.GetCarInfo();
+			timeUsecar1Info.Text = $"{this.car1.Name}  time use : {timeUseCar1}";
+
+			var timeUseCar2 = this.car2.RunForDistance(distance);
+			ImageCar2.TranslateTo(distance - 100, 0, timeUseCar2 * 10, Easing.Linear);
+			car2Info.Text = car2.GetCarInfo();
+			timeUsecar2Info.Text = $"{this.car2.Name}  time use : {timeUseCar2}";
+			finish = true;
+		}
 		else
-			CounterBtn.Text = $"Clicked {count} times";
+		{
+			ImageCar1.TranslateTo(0, 0, 0, Easing.Linear);
+			ImageCar2.TranslateTo(0, 0, 0, Easing.Linear);
+			finish = false;
+		}
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
 	}
 }
 
